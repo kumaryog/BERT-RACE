@@ -120,23 +120,28 @@ def read_race_examples(paths):
         for filename in filenames:
             with open(filename, 'r', encoding='utf-8') as fpr:
                 data_raw = json.load(fpr)
-                article = data_raw['article']
-                ## for each qn
-                for i in range(len(data_raw['answers'])):
-                    truth = ord(data_raw['answers'][i]) - ord('A')
-                    question = data_raw['questions'][i]
-                    options = data_raw['options'][i]
-                    examples.append(
-                        RaceExample(
-                            race_id = filename+'-'+str(i),
-                            context_sentence = article,
-                            start_ending = question,
+                for elements in data_raw['data']['instance']:
+                  article = elements['text']
+                  for que in elements['questions']['question']: 
+                    question = que['@text']
+                    label = 1
+                    if(que['answer'][0]['@correct']=='True'):
+                      label = 0
+                      #question = data_raw['questions'][i]
+                      options[0] = que['answer'][0]['@text']
+                      options[1] = que['answer'][1]['@text']
+                      options[3] = 
+                      examples.append(
+                          RaceExample(
+                              race_id = filename+'-'+str(i),
+                              context_sentence = article,
+                              start_ending = question,
 
-                            ending_0 = options[0],
-                            ending_1 = options[1],
-                            ending_2 = options[2],
-                            ending_3 = options[3],
-                            label = truth))
+                              ending_0 = options[0],
+                              ending_1 = options[1],
+                              ending_2 = 'UKN',
+                              ending_3 = 'UKN,
+                              label = truth))
                 
     return examples 
 
