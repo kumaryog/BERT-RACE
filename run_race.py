@@ -140,7 +140,7 @@ def read_race_examples(paths):
                               ending_0 = options[0],
                               ending_1 = options[1],
                               ending_2 = 'UKN',
-                              ending_3 = 'UKN,
+                              ending_3 = 'UKN',
                               label = truth))
                 
     return examples 
