@@ -380,7 +380,7 @@ def main():
     num_train_steps = None
     if args.do_train:
         train_dir = os.path.join(args.data_dir, 'train')
-        train_examples = read_race_examples([train_dir+'/high', train_dir+'/middle'])
+        train_examples = read_race_examples(train_dir)
         
         num_train_steps = int(
             len(train_examples) / args.train_batch_size / args.gradient_accumulation_steps * args.num_train_epochs)
@@ -498,9 +498,9 @@ def main():
             ## evaluate on dev set
             if global_step % 1000 == 0:
                 dev_dir = os.path.join(args.data_dir, 'dev')
-                dev_set = [dev_dir+'/high', dev_dir+'/middle']
+                #dev_set = [dev_dir+'/high', dev_dir+'/middle']
 
-                eval_examples = read_race_examples(dev_set)
+                eval_examples = read_race_examples(dev_dir)
                 eval_features = convert_examples_to_features(
                     eval_examples, tokenizer, args.max_seq_length, True)
                 logger.info("***** Running evaluation: Dev *****")
@@ -570,11 +570,9 @@ def main():
 
     if args.do_eval and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
         test_dir = os.path.join(args.data_dir, 'test')
-        test_high = [test_dir + '/high']
-        test_middle = [test_dir + '/middle']
 
         ## test high 
-        eval_examples = read_race_examples(test_high)
+        eval_examples = read_race_examples(test_dir)
         eval_features = convert_examples_to_features(
             eval_examples, tokenizer, args.max_seq_length, True)
         logger.info("***** Running evaluation: test high *****")
@@ -625,7 +623,7 @@ def main():
 
 
         ## test middle
-        eval_examples = read_race_examples(test_middle)
+        eval_examples = read_race_examples(test_dir)
         eval_features = convert_examples_to_features(
             eval_examples, tokenizer, args.max_seq_length, True)
         logger.info("***** Running evaluation: test middle *****")
